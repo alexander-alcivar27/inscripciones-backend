@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin · Reporte de Inscripciones</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&family=Source+Sans+3:wght@300;400;500;600&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="css/reporte.css">
+    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="js/reporte.js"></script>
+</head>
+
+<body>
+
+    <!-- ══════════════════════════════════════════
+       PANTALLA DE LOGIN
+  ══════════════════════════════════════════ -->
+    <div id="loginScreen">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="login-icon">
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#90CAF9" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                    </svg>
+                </div>
+                <h2>Acceso Administrador</h2>
+                <p>Sistema de Preinscripción</p>
+            </div>
+            <div class="login-body">
+                <div class="login-error" id="loginError"></div>
+                <div class="field">
+                    <label>Usuario</label>
+                    <input type="text" id="inputUsuario" placeholder="Ingrese su usuario"
+                        onkeydown="if(event.key==='Enter')hacerLogin()" />
+                </div>
+
+                <div class="pass-wrap">
+                    <input type="password" id="inputPassword" placeholder="Ingrese su contraseña"
+                        onkeydown="if(event.key==='Enter')hacerLogin()" />
+                    <button class="toggle-pass" type="button" onclick="togglePassword(this)" tabindex="-1">
+                        <svg id="iconOjo" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                            <circle cx="12" cy="12" r="3" />
+                        </svg>
+                    </button>
+                </div>
+                <button class="btn-login" id="btnLogin" onclick="hacerLogin()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+                        <polyline points="10 17 15 12 10 7" />
+                        <line x1="15" y1="12" x2="3" y2="12" />
+                    </svg>
+                    Ingresar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+       PANTALLA DE REPORTE
+  ══════════════════════════════════════════ -->
+    <div id="reporteScreen">
+
+        <header class="page-header">
+            <h1>Reporte de Inscripciones</h1>
+            <p>Panel de Administración · Capacitate Manabí</p>
+        </header>
+
+        <div class="admin-bar">
+            <div class="admin-chip">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                    <circle cx="12" cy="7" r="4" />
+                </svg>
+                <span id="adminNombre">Admin</span>
+            </div>
+            <button class="btn danger" onclick="cerrarSesion()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                    <polyline points="16 17 21 12 16 7" />
+                    <line x1="21" y1="12" x2="9" y2="12" />
+                </svg>
+                Cerrar sesión
+            </button>
+        </div>
+
+        <div class="main">
+            <!-- STATS -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Total inscritos</div>
+                    <div class="stat-value" id="statTotal">0</div>
+                    <div class="stat-sub">registros en sistema</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Con discapacidad</div>
+                    <div class="stat-value" id="statDisc">0</div>
+                    <div class="stat-sub">requieren atención especial</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Género femenino</div>
+                    <div class="stat-value" id="statFem">0</div>
+                    <div class="stat-sub">inscritas</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Género masculino</div>
+                    <div class="stat-value" id="statMasc">0</div>
+                    <div class="stat-sub">inscritos</div>
+                </div>
+            </div>
+            <!-- PEGAR ESTO DESPUÉS DEL STATS-GRID -->
+            <button class="toggle-charts-btn" id="toggleChartsBtn" onclick="toggleCharts()">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="20" x2="18" y2="10" />
+                    <line x1="12" y1="20" x2="12" y2="4" />
+                    <line x1="6" y1="20" x2="6" y2="14" />
+                </svg>
+                Ver análisis gráfico
+                <span class="charts-arrow" id="chartsArrow">▼</span>
+            </button>
+
+            <div class="charts-section" id="chartsSection">
+                <div class="charts-grid">
+                    <div class="chart-card">
+                        <div class="chart-card-title">Distribución por género</div>
+                        <div class="chart-legend" id="legendGenero"></div>
+                        <div class="chart-wrap"><canvas id="chartGenero" role="img"
+                                aria-label="Distribución por género">Género</canvas></div>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-card-title">Top 5 cantones</div>
+                        <div class="chart-wrap"><canvas id="chartCantones" role="img"
+                                aria-label="Top cantones">Cantones</canvas></div>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-card-title">Nivel de educación</div>
+                        <div class="chart-wrap"><canvas id="chartEducacion" role="img"
+                                aria-label="Nivel de educación">Educación</canvas></div>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-card-title">Autoidentificación</div>
+                        <div class="chart-legend" id="legendAutoident"></div>
+                        <div class="chart-wrap"><canvas id="chartAutoident" role="img"
+                                aria-label="Autoidentificación">Autoidentificación</canvas></div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- PANEL -->
+            <div class="panel">
+                <div class="toolbar">
+                    <div class="search-wrap">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8" />
+                            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                        </svg>
+                        <input type="text" id="inputBusqueda" placeholder="Buscar por cantón o provincia..."
+                            onkeydown="if(event.key==='Enter')buscar()" />
+                    </div>
+                    <button class="btn" onclick="buscar()">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8" />
+                            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                        </svg>
+                        Buscar
+                    </button>
+                    <button class="btn" onclick="verTodos()">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="8" y1="6" x2="21" y2="6" />
+                            <line x1="8" y1="12" x2="21" y2="12" />
+                            <line x1="8" y1="18" x2="21" y2="18" />
+                            <line x1="3" y1="6" x2="3.01" y2="6" />
+                            <line x1="3" y1="12" x2="3.01" y2="12" />
+                            <line x1="3" y1="18" x2="3.01" y2="18" />
+                        </svg>
+                        Ver todos
+                    </button>
+                    <button class="btn" onclick="cargarReporte()">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="1 4 1 10 7 10" />
+                            <path d="M3.51 15a9 9 0 1 0 .49-4.5" />
+                        </svg>
+                        Recargar
+                    </button>
+                    <button class="btn primary" onclick="generarExcel(datosActuales, 'reporte_completo')">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                            <polyline points="14 2 14 8 20 8" />
+                        </svg>
+                        Exportar Excel
+                    </button>
+                    <button class="btn primary" onclick="exportarPorProvincia()">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                            <polyline points="14 2 14 8 20 8" />
+                        </svg>
+                        exportar excel por provincia
+                    </button>
+                </div>
+
+                <div class="table-wrap">
+                    <table>
+                        <thead id="thead">
+                            <tr>
+                                <th>Cédula</th>
+                                <th>Nombres</th>
+                                <th>Apellidos</th>
+                                <th>Correo</th>
+                                <th>Celular</th>
+                                <th>Fecha Nac.</th>
+                                <th>Ocupación</th>
+                                <th>Institución</th>
+                                <th>Provincia</th>
+                                <th>Cantón</th>
+                                <th>Parroquia</th>
+                                <th>Barrio</th>
+                                <th>Género</th>
+                                <th>Orient. Sexual</th>
+                                <th>Nacionalidad</th>
+                                <th>Autoidentif.</th>
+                                <th>Discapacidad</th>
+                                <th>Tipo Discap.</th>
+                                <th>Nivel Educ.</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody">
+                            <tr>
+                                <td colspan="18" class="state-msg">Cargando datos...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-footer">
+                    <span id="countInfo">—</span>
+                    <div class="pagination" id="pagination"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DETALLE -->
+    <div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)cerrarModal()">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Detalle de inscripción</h3>
+                <button class="modal-close" onclick="cerrarModal()">✕</button>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: aledev
+      POSTGRES_PASSWORD: ale2353
+      POSTGRES_DB: inscripciones_db
+    ports:
+      - "5432:5432"

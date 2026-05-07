@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Banner Manabí</title>
+</head>
+<body style="margin:0;">
+<svg width="1900" height="920" viewBox="0 0 1900 920" xmlns="http://www.w3.org/2000/svg">
+
+  <!-- Fondo -->
+  <rect width="1900" height="920" fill="#17a589"/>
+
+  <!-- Patrón de círculos -->
+  <g opacity="0.15" fill="#ffffff">
+    <circle cx="200" cy="200" r="120"/>
+    <circle cx="400" cy="150" r="80"/>
+    <circle cx="600" cy="250" r="100"/>
+    <circle cx="900" cy="200" r="140"/>
+    <circle cx="1200" cy="180" r="90"/>
+    <circle cx="1500" cy="220" r="110"/>
+  </g>
+
+  <!-- Texto izquierdo -->
+  <text x="120" y="350" fill="#ffffff" font-size="60" font-family="Arial" font-weight="bold">
+    PREFECTURA DE
+  </text>
+
+  <text x="120" y="450" fill="#ffffff" font-size="110" font-family="Arial" font-weight="bold">
+    MANABÍ
+  </text>
+
+  <text x="120" y="520" fill="#ffffff" font-size="45" font-family="Arial">
+    Desarrollo y Equidad
+  </text>
+
+  <!-- Texto central -->
+  <text x="700" y="420" fill="#ffffff" font-size="120" font-family="Arial" font-weight="bold">
+    LEO
+  </text>
+
+  <text x="900" y="420" fill="#ffffff" font-size="70" font-family="Arial" font-weight="bold">
+    ORLANDO
+  </text>
+
+  <text x="900" y="480" fill="#ffffff" font-size="50" font-family="Arial" letter-spacing="8">
+    PREFECTO
+  </text>
+
+  <!-- Texto derecho -->
+  <text x="1400" y="400" fill="#ffffff" font-size="70" font-family="Arial" font-weight="bold">
+    #Manabí
+  </text>
+
+  <text x="1400" y="480" fill="#ffffff" font-size="70" font-family="Arial" font-weight="bold">
+    ModoON
+  </text>
+
+  <!-- Icono switch -->
+  <rect x="1650" y="360" rx="60" ry="60" width="180" height="90" fill="#ffffff"/>
+  <circle cx="1750" cy="405" r="35" fill="#17a589"/>
+
+</svg>
+</body>
+</html>
