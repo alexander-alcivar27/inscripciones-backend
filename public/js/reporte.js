@@ -1,5 +1,5 @@
 
-const BASE_URL = 'http://localhost:3000';
+const BASE_URL = 'https://capacitate-manabi.onrender.com';
 const PER_PAGE = 15;
 let TOKEN = '';
 let datosActuales = [];
