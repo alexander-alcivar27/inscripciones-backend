@@ -8,7 +8,7 @@ import { AuthModule } from './auth/auth.module';
 @Module({
   // 👇 aquí importamos el módulo de inscripción para que esté disponible en toda la aplicación
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }), // 👈 esto hace que las variables de entorno estén disponibles en toda la aplicació n
+    ConfigModule.forRoot({ isGlobal: true }),
     InscripcionModule,
     UbicacionModule,
     AuthModule,

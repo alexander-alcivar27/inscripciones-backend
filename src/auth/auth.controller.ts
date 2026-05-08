@@ -1,4 +1,3 @@
-// src/auth/auth.controller.ts
 import {
   Controller, Post, Body, Get,
   UseGuards, Request, HttpCode, HttpStatus,
@@ -19,8 +18,6 @@ export class AuthController {
   }
  
   // POST /auth/crear-admin
-  // ⚠️  Úsalo UNA sola vez para crear tu primer admin,
-  //     luego puedes protegerlo con el guard si quieres.
   @Post('crear-admin')
   @HttpCode(HttpStatus.CREATED)
   async crearAdmin(
