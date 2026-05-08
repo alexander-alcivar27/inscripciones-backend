@@ -1,6 +1,6 @@
 
 
-const BASE_URL = 'https://capacitate-manabi.onrender.com';
+const BASE_URL = 'http://localhost:3000';
 
 let currentStep = 1;
 let cedulaValida = false;
@@ -87,6 +87,7 @@ function toggleDiscapacidad() {
 // =======================
 const provinciaSelect = document.getElementById('provincia');
 const cantonSelect = document.getElementById('canton');
+const parroquiaSelect = document.getElementById('parroquia');
 
 async function cargarProvincias() {
     try {
@@ -111,6 +112,8 @@ async function cargarCantones() {
     const provinciaId = provinciaSelect.value;
 
     cantonSelect.innerHTML = '<option value="">Seleccione...</option>';
+    parroquiaSelect.innerHTML = '<option value="">Seleccione cantón primero</option>';
+
     if (!provinciaId) return;
 
     try {
@@ -129,8 +132,33 @@ async function cargarCantones() {
     }
 }
 
+async function cargarParroquias() {
+    const cantonId = cantonSelect.value;
+
+    parroquiaSelect.innerHTML = '<option value="">Seleccione...</option>';
+
+    if (!cantonId) return;
+
+    try {
+        const res = await fetch(`${BASE_URL}/parroquias/${cantonId}`);
+        const data = await res.json();
+
+        data.forEach(p => {
+            const opt = document.createElement('option');
+            opt.value = p.id;
+            opt.textContent = p.nombre;
+            parroquiaSelect.appendChild(opt);
+        });
+
+    } catch {
+        console.warn('No se cargaron parroquias');
+    }
+}
+
 provinciaSelect.addEventListener('change', cargarCantones);
+cantonSelect.addEventListener('change', cargarParroquias);
 cargarProvincias();
+
 
 // =======================
 // 🛠 UTILIDADES
@@ -248,7 +276,7 @@ async function enviarFormulario() {
         institucion: getVal('institucion'),
         provinciaId: Number(provinciaSelect.value),
         cantonId: Number(cantonSelect.value),
-        parroquia: getVal('parroquia'),
+        parroquiaId: Number(parroquiaSelect.value),
         barrio: getVal('barrio'),
         genero: getVal('genero'),
         orientacionSexual: getVal('orientacion'),
