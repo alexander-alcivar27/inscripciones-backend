@@ -1,5 +1,4 @@
 
-
 const BASE_URL = 'http://localhost:3000';
 
 let currentStep = 1;
@@ -25,62 +24,75 @@ const REQUIRED_IDS = [
     'discapacidad',
     'nivelEdu'];
 
-// =======================
-// 🔥 VALIDACIÓN CÉDULA
-// =======================
-const cedulaInput = document.getElementById('cedula');
-const cedulaStatus = document.getElementById('cedulaStatus');
+const pasos = [
+  'Bienvenida',
+  'Datos personales',
+  'Ubicación',
+  'Perfil',
+  'Confirmación'
+];
 
-cedulaInput.addEventListener('input', async () => {
-    let cedula = cedulaInput.value.replace(/\D/g, '');
-    cedulaInput.value = cedula;
-    cedulaValida = false;
+const modulos = [
+  {
+    titulo: 'Derechos Humanos',
+    descripcion:
+      'Conoce el origen, los principios y la importancia de los derechos humanos, sus garantías y su aplicación en la vida cotidiana.'
+  },
+  {
+    titulo: 'Participación Ciudadana',
+    descripcion:
+      'Aprende cómo incidir en tu comunidad, ejercer liderazgo responsable y participar en la transformación de tu entorno.'
+  },
+  {
+    titulo: 'Liderazgo y Organización Social',
+    descripcion:
+      'Descubre estilos de liderazgo, la importancia de las organizaciones sociales y la toma de decisiones colectivas.'
+  },
+  {
+    titulo: 'Políticas Públicas y Elaboración de Proyectos',
+    descripcion:
+      'Comprende cómo se diseñan las políticas públicas y cómo convertir ideas en propuestas concretas para tu territorio.'
+  }
+];
 
-    if (cedula.length === 0) {
-        cedulaStatus.textContent = '';
-        return;
-    }
+const identidades = [
+  'Mestizo/a',
+  'Indígena',
+  'Cholo/a',
+  'Montuvio/a',
+  'Afrodescendiente',
+  'Blanco/a'
+];
 
-    if (cedula.length < 10) {
-        cedulaStatus.textContent = 'La cédula debe tener 10 dígitos';
-        cedulaStatus.style.color = 'orange';
-        return;
-    }
+const stepsContainer = document.getElementById('steps');
+const modulesContainer = document.getElementById('modules-list');
+const identityContainer = document.getElementById('identity-chips');
 
-    try {
-        cedulaStatus.textContent = 'Validando... ⏳';
-
-        const res = await fetch(`${BASE_URL}/inscripciones/cedula/${cedula}`);
-        const data = await res.json();
-
-        if (data.exists) {
-            cedulaStatus.textContent = '❌ Cédula ya registrada';
-            cedulaStatus.style.color = 'red';
-            cedulaValida = false;
-        } else {
-            cedulaStatus.textContent = '✅ Cédula válida';
-            cedulaStatus.style.color = 'lightgreen';
-            cedulaValida = true;
-        }
-
-    } catch {
-        cedulaStatus.textContent = '⚠️ Error validando cédula';
-    }
+pasos.forEach((paso, index) => {
+  const div = document.createElement('div');
+  div.className = index === 1 ? 'step active' : 'step';
+  div.textContent = `${index + 1}. ${paso}`;
+  stepsContainer.appendChild(div);
 });
 
-// =======================
-// 🔁 DISCAPACIDAD
-// =======================
-function toggleDiscapacidad() {
-    const val = document.getElementById('discapacidad').value;
-    const wrap = document.getElementById('tipoDiscapacidadWrap');
+modulos.forEach((modulo, index) => {
+  const div = document.createElement('div');
+  div.className = 'module-card';
 
-    if (val === 'true') {
-        wrap.style.display = 'block';
-    } else {
-        wrap.style.display = 'none';
-    }
-}
+  div.innerHTML = `
+    <small>Módulo ${index + 1}</small>
+    <h4>${modulo.titulo}</h4>
+    <p>${modulo.descripcion}</p>
+  `;
+
+  modulesContainer.appendChild(div);
+});
+
+identidades.forEach(item => {
+  const span = document.createElement('span');
+  span.textContent = item;
+  identityContainer.appendChild(span);
+});
 
 // =======================
 // 🌎 PROVINCIAS Y CANTONES
@@ -159,221 +171,30 @@ provinciaSelect.addEventListener('change', cargarCantones);
 cantonSelect.addEventListener('change', cargarParroquias);
 cargarProvincias();
 
+const nacionalidadSelect = document.getElementById('nacionalidad');
 
-// =======================
-// 🛠 UTILIDADES
-// =======================
-function getVal(id) {
-    return (document.getElementById(id)?.value || '').trim();
-}
-
-function clearErrors() {
-    REQUIRED_IDS.forEach(id => {
-        document.getElementById(id)?.classList.remove('error');
-    });
-}
-
-function validate() {
-    if (!cedulaValida) {
-        document.getElementById('cedula').classList.add('error');
-        return false;
-    }
-
-    let first = null;
-
-    REQUIRED_IDS.forEach(id => {
-        const el = document.getElementById(id);
-        if (el && !getVal(id)) {
-            el.classList.add('error');
-            if (!first) first = el;
-        }
-    });
-
-    if (first) {
-        first.focus();
-        return false;
-    }
-
-    return true;
-}
-
-// =======================
-// 🧾 RESUMEN
-// =======================
-function buildResumen() {
-    const discval = getVal('discapacidad');
-    const tipoDisc = discval === 'true' ? getVal('tipoDiscapacidad') || 'Sí' : 'No';
-
-    const data = [
-        ['Cédula', getVal('cedula')],
-        ['Nombres', getVal('nombres')],
-        ['Apellidos', getVal('apellidos')],
-        ['Correo', getVal('correo')],
-        ['Celular', getVal('celular')],
-        ['Fecha', getVal('fechaNac')],
-        ['Ocupación', getVal('ocupacion')],
-        ['Institución', getVal('institucion')],
-        ['Provincia', provinciaSelect.options[provinciaSelect.selectedIndex]?.text],
-        ['Cantón', cantonSelect.options[cantonSelect.selectedIndex]?.text],
-        ['Parroquia', getVal('parroquia')],
-        ['Barrio', getVal('barrio')],
-        ['Género', getVal('genero')],
-        ['Orientación Sexual', getVal('orientacion')],
-        ['Nacionalidad', getVal('nacionalidad')],
-        ['Discapacidad', tipoDisc],
-        ['Nivel educación', getVal('nivelEdu')]
-    ];
-
-    document.getElementById('resumen').innerHTML =
-        data.map(([k, v]) => `
-      <div class="review-row">
-        <span class="review-key">${k}</span>
-        <span class="review-val">${v || '-'}</span>
-      </div>
-    `).join('');
-}
-
-// =======================
-// ➡️ PASOS
-// =======================
-function goNext() {
-    if (currentStep === 1) {
-        clearErrors();
-        if (!validate()) return;
-        currentStep = 2;
-        document.getElementById('step1').style.display = 'none';
-        document.getElementById('step2').style.display = 'block';
-        document.getElementById('tab1').className = 'step-tab done';
-        document.getElementById('tab2').className = 'step-tab active';
-        document.getElementById('btnBack').style.display = '';
-        document.getElementById('btnNext').innerHTML = `Confirmar y enviar <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
-        document.getElementById('progText').textContent = 'Paso 2 de 2';
-        buildResumen();
-    } else if (currentStep === 2) {
-        enviarFormulario();
-    }
-}
-
-// =======================
-// 📩 ENVÍO
-// =======================
-async function enviarFormulario() {
-    const btnNext = document.getElementById('btnNext');
-    btnNext.disabled = true;
-    btnNext.textContent = 'Enviando...';
-
-    const discapacidadVal = getVal('discapacidad');
-    const tipo = getVal('tipoDiscapacidad');
-
-    const payload = {
-        cedula: getVal('cedula'),
-        nombres: getVal('nombres'),
-        apellidos: getVal('apellidos'),
-        correo: getVal('correo'),
-        celular: getVal('celular'),
-        fechaNacimiento: new Date(getVal('fechaNac')).toISOString(),
-        ocupacion: getVal('ocupacion'),
-        institucion: getVal('institucion'),
-        provinciaId: Number(provinciaSelect.value),
-        cantonId: Number(cantonSelect.value),
-        parroquiaId: Number(parroquiaSelect.value),
-        barrio: getVal('barrio'),
-        genero: getVal('genero'),
-        orientacionSexual: getVal('orientacion'),
-        nacionalidad: getVal('nacionalidad'),
-        autoidentificacion: getVal('autoidentificacion'),
-        discapacidad: discapacidadVal === 'true',
-        tipoDiscapacidad: discapacidadVal === 'true' ? tipo.trim() : null,
-        nivelEducacion: getVal('nivelEdu'),
-    };
-
+async function cargarNacionalidades() {
     try {
-        console.log('PAYLOAD QUE SE ENVÍA:', payload);
-        const res = await fetch(`${BASE_URL}/inscripciones`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
+        const res = await fetch(`${BASE_URL}/nacionalidades`);
+        const data = await res.json();
+
+        nacionalidadSelect.innerHTML = '<option value="">Seleccione...</option>';
+
+        data.forEach(p => {
+            const opt = document.createElement('option');
+            opt.value = p.id;
+            opt.textContent = p.gentilicio;
+                        // Ecuador seleccionado por defecto
+            if (p.id === 83) {
+                opt.selected = true;
+            }
+            nacionalidadSelect.appendChild(opt);
         });
 
-        const result = await res.json();
-        if (!res.ok) throw new Error(result.message || 'Error del servidor');
-
-        currentStep = 3;
-        document.getElementById('step2').style.display = 'none';
-        document.getElementById('tab2').className = 'step-tab done';
-        document.getElementById('tab3').className = 'step-tab active';
-        document.getElementById('footerBar').style.display = 'none';
-        const folio = result.folio || result.id || ('PRE-' + new Date().getFullYear() + '-' + Math.floor(10000 + Math.random() * 90000));
-        document.getElementById('folioNum').textContent = folio;
-        document.getElementById('step3').style.display = 'flex';
-
-    } catch (error) {
-        btnNext.disabled = false;
-        btnNext.innerHTML = `Confirmar y enviar <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
-        let errBox = document.getElementById('submitError');
-        if (!errBox) {
-            errBox = document.createElement('div');
-            errBox.id = 'submitError';
-            errBox.style.cssText = 'background:rgba(255,100,100,0.15);border:1px solid rgba(255,100,100,0.4);border-radius:10px;padding:0.75rem 1rem;font-size:0.83rem;color:rgba(255,180,180,1);margin-bottom:1rem';
-            document.getElementById('resumen').before(errBox);
-        }
-        errBox.textContent = '❌ ' + (error.message || 'Error al guardar. Intente de nuevo.');
+    } catch {
+        console.warn('No se cargaron la nacionalidades');
     }
 }
 
+cargarNacionalidades();
 
-// =======================
-// ⬅️ REGRESAR
-// =======================
-function goBack() {
-    if (currentStep === 2) {
-        currentStep = 1;
-        const errBox = document.getElementById('submitError');
-        if (errBox) errBox.remove();
-        document.getElementById('step2').style.display = 'none';
-        document.getElementById('step1').style.display = 'block';
-        document.getElementById('tab1').className = 'step-tab active';
-        document.getElementById('tab2').className = 'step-tab';
-        document.getElementById('btnBack').style.display = 'none';
-        document.getElementById('btnNext').innerHTML = `Continuar <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>`;
-        document.getElementById('progText').textContent = 'Paso 1 de 2';
-    }
-}
-
-// Quitar error al escribir
-REQUIRED_IDS.forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.addEventListener('input', () => el.classList.remove('error'));
-});
-
-// =======================
-// 🔄 NUEVA INSCRIPCIÓN
-// =======================
-function nuevaInscripcion() {
-    // Resetear todos los campos
-    REQUIRED_IDS.forEach(id => {
-        const el = document.getElementById(id);
-        if (el) { el.value = ''; el.classList.remove('error'); }
-    });
-    document.getElementById('barrio').value = '';
-    document.getElementById('tipoDiscapacidad').value = '';
-    document.getElementById('tipoDiscapacidadWrap').style.display = 'none';
-    document.getElementById('cedulaStatus').textContent = '';
-    cedulaValida = false;
-    currentStep = 1;
-
-    // Volver al paso 1
-    document.getElementById('step3').style.display = 'none';
-    document.getElementById('step1').style.display = 'block';
-    document.getElementById('tab1').className = 'step-tab active';
-    document.getElementById('tab2').className = 'step-tab';
-    document.getElementById('tab3').className = 'step-tab';
-    document.getElementById('footerBar').style.display = 'flex';
-    document.getElementById('btnBack').style.display = 'none';
-    document.getElementById('btnNext').innerHTML = `Continuar <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>`;
-    document.getElementById('progText').textContent = 'Paso 1 de 2';
-
-    // Recargar provincias
-    cargarProvincias();
-
-}

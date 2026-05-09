@@ -34,16 +34,12 @@ export class InscripcionService {
 
         ocupacion: data.ocupacion,
         institucion: data.institucion,
-
-        provinciaId: Number(data.provinciaId),  
-        cantonId: Number(data.cantonId),        
-
-        parroquia: data.parroquia,
+        parroquiaId: Number(data.parroquia),
         barrio: data.barrio,
 
         genero: data.genero,
         orientacionSexual: data.orientacionSexual,
-        nacionalidad: data.nacionalidad,
+        nacionalidadId: Number(data.nacionalidad),
         autoidentificacion: data.autoidentificacion,
 
         discapacidad: data.discapacidad,
@@ -74,7 +70,7 @@ export class InscripcionService {
     });
     return { exists: !!user };
   }
-  // método para obtener inscripciones por el nombre de la provincia
+/*   // método para obtener inscripciones por el nombre de la provincia
   async getPorProvincia(nombre: string) {
     const personas = await this.prisma.inscription.findMany({
       where: {
@@ -130,10 +126,10 @@ export class InscripcionService {
       personas: formatted,
     };
    
-  }
+  } */
 
   // método para obtener inscripciones por el nombre del cantón
-  async getPorCanton(nombre: string) {
+/*   async getPorCanton(nombre: string) {
     const personas = await this.prisma.inscription.findMany({
       where: {
         canton: {
@@ -156,7 +152,7 @@ export class InscripcionService {
       total: personas.length,
       personas,
     };
-  }
+  } */
   // método para obtener un reporte general de todas las inscripciones con detalles de provincia y cantón
   async getReporteGeneral() {
     const personas = await this.prisma.inscription.findMany({
@@ -186,16 +182,16 @@ export class InscripcionService {
         createdAt: true,
 
         // RELACIONES 
-        canton: {
-          select: {
-            nombre: true
-          }
-        },
-        provincia: {
-          select: {
-            nombre: true
-          }
-        }
+        // parroquia: {
+        //   select: {
+        //     nombre: true
+        //   }
+        // },
+        // provincia: {
+        //   select: {
+        //     nombre: true
+        //   }
+        // }
       }
     });
 
@@ -210,8 +206,8 @@ export class InscripcionService {
       ocupacion: p.ocupacion,
       institucion: p.institucion,
 
-      provincia: p.provincia?.nombre,
-      canton: p.canton?.nombre,
+      // provincia: p.provincia?.nombre,
+      // canton: p.canton?.nombre,
       parroquia: p.parroquia,
       barrio: p.barrio,
 

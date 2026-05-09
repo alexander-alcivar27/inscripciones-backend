@@ -3,6 +3,7 @@ import { InscripcionModule } from './inscription/inscription.module';
 import { UbicacionModule } from './ubicacion/ubicacion.module';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
+import { NacionalidadesModule } from './nacionalidades/nacionalidades.module';
 
 
 @Module({
@@ -12,6 +13,7 @@ import { AuthModule } from './auth/auth.module';
     InscripcionModule,
     UbicacionModule,
     AuthModule,
+    NacionalidadesModule,
   ],
   controllers: [],
   providers: [],

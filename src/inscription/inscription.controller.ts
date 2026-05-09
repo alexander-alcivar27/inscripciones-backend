@@ -25,16 +25,17 @@ export class InscripcionController {
   }
 
   // Define un método para manejar las solicitudes GET a la ruta '/inscripciones/reporte/canton/:nombre'.
-  @Get('reporte/canton/:nombre')
-  getPorCanton(@Param('nombre') nombre: string) {
-    return this.service.getPorCanton(nombre);
-  }
+  // @Get('reporte/canton/:nombre')
+  // getPorCanton(@Param('nombre') nombre: string) {
+  //   return this.service.getPorCanton(nombre);
+  // }
 
   // Define un método para manejar las solicitudes GET a la ruta '/inscripciones/reporte/provincia/:nombre'.
-  @Get('reporte/provincia/:nombre')
-  getPorProvincia(@Param('nombre') nombre: string) {
-    return this.service.getPorProvincia(nombre);
-  }
+  // @Get('reporte/provincia/:nombre')
+  // getPorProvincia(@Param('nombre') nombre: string) {
+  //   return this.service.getPorProvincia(nombre);
+  // }
+  
   @Get('reporte')
 getReporteGeneral() {
   return this.service.getReporteGeneral();

@@ -25,19 +25,21 @@ model Inscription {
   institucion String?
 
   parroquiaId Int
-  barrio      String?
+
+  barrio String?
 
   genero             String
   orientacionSexual  String?
-  nacionalidad       String
+  nacionalidadId     Int
   autoidentificacion String?
 
   discapacidad     Boolean
   tipoDiscapacidad String?
   nivelEducacion   String
 
-  createdAt DateTime  @default(now())
-  parroquia Parroquia @relation(fields: [parroquiaId], references: [id])
+  createdAt    DateTime     @default(now())
+  parroquia    Parroquia    @relation(fields: [parroquiaId], references: [id])
+  nacionalidad Nacionalidad @relation(fields: [nacionalidadId], references: [id])
 }
 
 model Admin {
@@ -51,8 +53,8 @@ model Admin {
 }
 
 model Provincia {
-  id      Int    @id
-  nombre  String @map("provincia")
+  id     Int    @id
+  nombre String @map("provincia")
 
   cantones Canton[]
 
@@ -60,8 +62,8 @@ model Provincia {
 }
 
 model Canton {
-  id      Int    @id
-  nombre  String @map("canton")
+  id     Int    @id
+  nombre String @map("canton")
 
   provinciaId Int
   provincia   Provincia @relation(fields: [provinciaId], references: [id])
@@ -72,8 +74,8 @@ model Canton {
 }
 
 model Parroquia {
-  id      Int    @id
-  nombre  String @map("parroquia")
+  id     Int    @id
+  nombre String @map("parroquia")
 
   cantonId Int
   canton   Canton @relation(fields: [cantonId], references: [id])
@@ -81,4 +83,15 @@ model Parroquia {
   inscriptions Inscription[]
 
   @@map("Parroquia")
+}
+
+model Nacionalidad {
+  id       paisNac   Int    @id @default(autoincrement())
+  paisNac     String @map("pais_nac")
+  gentilicio  String @map("gentilicio_nac")
+  iso         String @map("iso_nac")
+
+  inscriptions Inscription[]
+
+  @@map("Nacionalidad")
 }
