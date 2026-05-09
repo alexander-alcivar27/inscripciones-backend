@@ -47,7 +47,7 @@
 
                             <div class="info-item">
                                 <span>Inicio</span>
-                                <strong>1 de octubre 2025</strong>
+                                <strong>Mayo 2026</strong>
                             </div>
 
                             <div class="info-item">
@@ -176,13 +176,15 @@
                     </div>
                     <div class="field">
                         <label>Cantón <span class="req">*</span></label>
-                        <select id="canton">
-                            <option value="">Seleccione provincia primero</option>
+                        <select id="canton" onchange="cargarParroquias()">
+                        <option value="">Seleccione provincia primero</option>
                         </select>
                     </div>
                     <div class="field">
-                        <label>Parroquia <span class="req">*</span></label>
-                        <input type="text" id="parroquia" placeholder="Ej. La Matriz" />
+                    <label>Parroquia <span class="req">*</span></label>
+                        <select id="parroquia">
+                            <option value="">Seleccione cantón primero</option>
+                        </select>
                     </div>
                     <div class="field">
                         <label>Barrio</label>

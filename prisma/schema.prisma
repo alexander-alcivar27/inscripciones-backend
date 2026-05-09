@@ -11,75 +11,74 @@ datasource db {
   provider = "postgresql"
 }
 
-
-
 model Inscription {
-  id                  Int      @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
-  cedula              String   @unique
-  nombres             String
-  apellidos           String
-  correo              String
-  celular             String?
-  fechaNacimiento     DateTime
+  cedula          String   @unique
+  nombres         String
+  apellidos       String
+  correo          String
+  celular         String?
+  fechaNacimiento DateTime
 
-  ocupacion           String?
-  institucion         String?
+  ocupacion   String?
+  institucion String?
 
-  provinciaId         Int
-  cantonId            Int
-  parroquia           String
-  barrio              String?
+  parroquiaId Int
+  barrio      String?
 
-  genero              String
-  orientacionSexual   String?
-  nacionalidad        String
-  autoidentificacion  String?
+  genero             String
+  orientacionSexual  String?
+  nacionalidad       String
+  autoidentificacion String?
 
-  discapacidad        Boolean
-  tipoDiscapacidad    String?
-  nivelEducacion      String
+  discapacidad     Boolean
+  tipoDiscapacidad String?
+  nivelEducacion   String
 
-  createdAt           DateTime @default(now())
-
-  provincia Provincia @relation(fields: [provinciaId], references: [id])
-  canton    Canton    @relation(fields: [cantonId], references: [id])
-}
-
-
-
-
-
-
-model Provincia {
-  id       Int      @id @default(autoincrement())
-  nombre   String   @unique
-  cantones Canton[]
-  inscripciones Inscription[]
-}
-
-model Canton {
-  id          Int         @id @default(autoincrement())
-  nombre      String      @unique
-  provinciaId Int
-  provincia   Provincia   @relation(fields: [provinciaId], references: [id])
-  parroquias  Parroquia[]
-  inscripciones Inscription[]
-}
-
-model Parroquia {
-  id       Int    @id @default(autoincrement())
-  nombre   String @unique
-  cantonId Int
-  canton   Canton @relation(fields: [cantonId], references: [id])
+  createdAt DateTime  @default(now())
+  parroquia Parroquia @relation(fields: [parroquiaId], references: [id])
 }
 
 model Admin {
   id        Int      @id @default(autoincrement())
   usuario   String   @unique
-  password  String   // bcrypt hash
+  password  String // bcrypt hash
   nombre    String?
   createdAt DateTime @default(now())
 
   @@map("admins")
+}
+
+model Provincia {
+  id      Int    @id
+  nombre  String @map("provincia")
+
+  cantones Canton[]
+
+  @@map("Provincia")
+}
+
+model Canton {
+  id      Int    @id
+  nombre  String @map("canton")
+
+  provinciaId Int
+  provincia   Provincia @relation(fields: [provinciaId], references: [id])
+
+  parroquias Parroquia[]
+
+  @@map("Canton")
+}
+
+model Parroquia {
+  id      Int    @id
+  nombre  String @map("parroquia")
+
+  cantonId Int
+  canton   Canton @relation(fields: [cantonId], references: [id])
+
+  inscriptions Inscription[]
+
+  @@map("Parroquia")
 }
