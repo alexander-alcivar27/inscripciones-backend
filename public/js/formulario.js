@@ -1,5 +1,7 @@
+// para dessarrollo local, usar localhost
+//const BASE_URL = 'http://localhost:3000';
 
-
+// Para producción, descomenta la línea de abajo y comenta la de localhost
 const BASE_URL = 'https://capacitate-manabi.onrender.com';
 
 let currentStep = 1;
