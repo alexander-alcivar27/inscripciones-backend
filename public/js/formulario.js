@@ -20,7 +20,7 @@ const REQUIRED_IDS = [
     'canton',
     'parroquia',
     'barrio',
-    'genero',0
+    'genero',
     'orientacion',
     'nacionalidad',
     'autoidentificacion',
