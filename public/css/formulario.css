@@ -310,3 +310,45 @@ button.secondary {
     font-size: 26px;
   }
 }
+
+.form-card {
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 28px;
+  margin-bottom: 28px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+  border: 1px solid #e5e7eb;
+}
+
+.form-card h2 {
+  font-size: 24px;
+  margin-bottom: 18px;
+  color: #1f2937;
+}
+
+.required {
+  color: #0fac9a;
+}
+
+.consent-text p {
+  font-size: 15px;
+  line-height: 1.7;
+  color: #374151;
+  margin-bottom: 16px;
+}
+
+.checkbox-line {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 22px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.checkbox-line input {
+  width: 18px;
+  height: 18px;
+  accent-color: #0fac9a;
+}
