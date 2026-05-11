@@ -12,7 +12,7 @@ export class InscripcionService {
   ) { }
 
 
-// inscripcion 
+  // inscripcion 
   async create(data: any) {
 
 
@@ -66,16 +66,16 @@ export class InscripcionService {
     });
 
     // enviar correo
-// enviar correo
-//console.log('📧 Voy a enviar correo a:', inscription.correo);
+    // enviar correo
+    //console.log('📧 Voy a enviar correo a:', inscription.correo);
 
-const resultadoCorreo =
-  await this.mailservice.enviarConfirmacionPreinscripcion(
-    inscription.correo,
-    inscription.nombres,
-  );
+    const resultadoCorreo =
+      await this.mailservice.enviarConfirmacionPreinscripcion(
+        inscription.correo,
+        inscription.nombres,
+      );
 
-//console.log('📧 Resultado:', resultadoCorreo);
+    //console.log('📧 Resultado:', resultadoCorreo);
 
     return {
       message: 'Inscripción guardada correctamente',
@@ -101,90 +101,95 @@ const resultadoCorreo =
     });
     return { exists: !!user };
   }
-  /*   // método para obtener inscripciones por el nombre de la provincia
-    async getPorProvincia(nombre: string) {
-      const personas = await this.prisma.inscription.findMany({
-        where: {
-          provincia: {
-            nombre: {
-              contains: nombre,
-              mode: 'insensitive', // Ignorar mayúsculas/minúsculas
-            },
-          },
-        },
-        select: {
-          cedula: true,
-          nombres: true,
-          apellidos: true,
-          correo: true,
-          celular: true,
-          fechaNacimiento: true,
-          ocupacion: true,
-          institucion: true,
-        
-          parroquia: true,
-          barrio: true,
-          genero: true,
-          orientacionSexual: true,
-          nacionalidad: true,
-          autoidentificacion: true,
-          discapacidad: true,
-          tipoDiscapacidad: true,
-          nivelEducacion: true,
-          createdAt: true,
-  
-          // 🔥 RELACIONES (AQUÍ ESTÁ LA CLAVE)
-          canton: {
-            select: {
-              nombre: true
-            }
-          },
-          provincia: {
-            select: {
-              nombre: true
-            }
-          }
-        },
-      });
-          const formatted = personas.map(p => ({
-            ...p,
-            provincia: p.provincia?.nombre,
-            canton: p.canton?.nombre,
-          }));
-  
-      return {
-        total: formatted.length,
-        personas: formatted,
-      };
-     
-    } */
+  // método para obtener inscripciones por el nombre de la provincia
+  async getReportePorProvincia(provincia: string) {
+    const termino = provincia
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase();
 
-  // método para obtener inscripciones por el nombre del cantón
-  /*   async getPorCanton(nombre: string) {
-      const personas = await this.prisma.inscription.findMany({
-        where: {
-          canton: {
-            nombre: {
-              contains: nombre,
-              mode: 'insensitive', // Ignorar mayúsculas/minúsculas
+    const personas = await this.prisma.inscription.findMany({
+      select: {
+        cedula: true,
+        nombres: true,
+        apellidos: true,
+        correo: true,
+        celular: true,
+        fechaNacimiento: true,
+        ocupacion: true,
+        institucion: true,
+        barrio: true,
+        genero: true,
+        orientacionSexual: true,
+        autoidentificacion: true,
+        discapacidad: true,
+        tipoDiscapacidad: true,
+        nivelEducacion: true,
+        createdAt: true,
+
+        parroquia: {
+          select: {
+            nombre: true,
+            canton: {
+              select: {
+                nombre: true,
+                provincia: {
+                  select: {
+                    nombre: true,
+                  },
+                },
+              },
             },
           },
         },
-        select: {
-          cedula: true,
-          nombres: true,
-          apellidos: true,
-          correo: true,
-          celular: true,
+
+        nacionalidad: {
+          select: {
+            gentilicio: true,
+          },
         },
-      });
-  
-      return {
-        total: personas.length,
-        personas,
-      };
-    } */
-  // método para obtener un reporte general de todas las inscripciones con detalles de provincia y cantón
+      },
+    });
+
+    const formatted = personas.map((p) => ({
+      cedula: p.cedula,
+      nombres: p.nombres,
+      apellidos: p.apellidos,
+      correo: p.correo,
+      celular: p.celular,
+      fechaNacimiento: p.fechaNacimiento,
+      ocupacion: p.ocupacion || 'N/A',
+      institucion: p.institucion || 'N/A',
+      provincia: p.parroquia?.canton?.provincia?.nombre || 'N/A',
+      canton: p.parroquia?.canton?.nombre || 'N/A',
+      parroquia: p.parroquia?.nombre || 'N/A',
+      barrio: p.barrio || 'N/A',
+      genero: p.genero,
+      orientacionSexual: p.orientacionSexual || 'N/A',
+      nacionalidad: p.nacionalidad?.gentilicio || 'N/A',
+      autoidentificacion: p.autoidentificacion || 'N/A',
+      discapacidad: p.discapacidad,
+      tipoDiscapacidad: p.tipoDiscapacidad || null,
+      nivelEducacion: p.nivelEducacion,
+      createdAt: p.createdAt,
+    }));
+
+    const filtrado = formatted.filter((p) => {
+      const prov = (p.provincia || '')
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase();
+
+      return prov.includes(termino);
+    });
+
+    return {
+      total: filtrado.length,
+      personas: filtrado,
+    };
+  }
+
+
   async getReporteGeneral() {
     const personas = await this.prisma.inscription.findMany({
       select: {
@@ -198,57 +203,66 @@ const resultadoCorreo =
         ocupacion: true,
         institucion: true,
 
-        parroquia: true,
         barrio: true,
-
         genero: true,
         orientacionSexual: true,
-        nacionalidad: true,
         autoidentificacion: true,
-
         discapacidad: true,
         tipoDiscapacidad: true,
-
         nivelEducacion: true,
         createdAt: true,
 
-        // RELACIONES 
-        // parroquia: {
-        //   select: {
-        //     nombre: true
-        //   }
-        // },
-        // provincia: {
-        //   select: {
-        //     nombre: true
-        //   }
-        // }
-      }
+        parroquia: {
+          select: {
+            nombre: true,
+            canton: {
+              select: {
+                nombre: true,
+                provincia: {
+                  select: {
+                    nombre: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+
+        nacionalidad: {
+          select: {
+            gentilicio: true,
+            paisNac: true,
+            iso: true,
+          },
+        },
+      },
     });
 
-    // formatear datos para incluir nombres de provincia y cantón
-    const formatted = personas.map(p => ({
+    const formatted = personas.map((p) => ({
       cedula: p.cedula,
       nombres: p.nombres,
       apellidos: p.apellidos,
       correo: p.correo,
       celular: p.celular,
       fechaNacimiento: p.fechaNacimiento,
-      ocupacion: p.ocupacion,
-      institucion: p.institucion,
 
-      // provincia: p.provincia?.nombre,
-      // canton: p.canton?.nombre,
-      parroquia: p.parroquia,
-      barrio: p.barrio,
+      ocupacion: p.ocupacion || 'N/A',
+      institucion: p.institucion || 'N/A',
+
+      provincia: p.parroquia?.canton?.provincia?.nombre || 'N/A',
+      canton: p.parroquia?.canton?.nombre || 'N/A',
+      parroquia: p.parroquia?.nombre || 'N/A',
+      barrio: p.barrio || 'N/A',
 
       genero: p.genero,
-      orientacionSexual: p.orientacionSexual,
-      nacionalidad: p.nacionalidad,
-      autoidentificacion: p.autoidentificacion,
+      orientacionSexual: p.orientacionSexual || 'N/A',
 
-      discapacidad: p.discapacidad,
-      tipoDiscapacidad: p.tipoDiscapacidad || null,
+      nacionalidad: p.nacionalidad?.gentilicio || 'N/A',
+
+      autoidentificacion: p.autoidentificacion || 'N/A',
+
+      discapacidad: p.discapacidad ? 'Sí' : 'No',
+      tipoDiscapacidad: p.tipoDiscapacidad || '—',
 
       nivelEducacion: p.nivelEducacion,
       createdAt: p.createdAt,
@@ -256,10 +270,7 @@ const resultadoCorreo =
 
     return {
       total: formatted.length,
-      personas: formatted
+      personas: formatted,
     };
   }
-
-
-
 }
