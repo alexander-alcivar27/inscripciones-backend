@@ -4,7 +4,7 @@ import { CreateInscripcionDto } from './dto/create-dto';
 
 @Controller('inscripciones')
 export class InscripcionController {
- 
+
   constructor(private readonly service: InscripcionService) { }
 
   // Define un método para manejar las solicitudes POST a la ruta '/inscripciones'. 
@@ -31,15 +31,15 @@ export class InscripcionController {
   // }
 
   // Define un método para manejar las solicitudes GET a la ruta '/inscripciones/reporte/provincia/:nombre'.
-  // @Get('reporte/provincia/:nombre')
-  // getPorProvincia(@Param('nombre') nombre: string) {
-  //   return this.service.getPorProvincia(nombre);
-  // }
-  
+  @Get('reporte/provincia/:nombre')
+  getPorProvincia(@Param('nombre') nombre: string) {
+    return this.service.getReportePorProvincia(nombre);
+  }
+
   @Get('reporte')
-getReporteGeneral() {
-  return this.service.getReporteGeneral();
-}
+  getReporteGeneral() {
+    return this.service.getReporteGeneral();
+  }
 
   // Define un método para manejar las solicitudes DELETE a la ruta '/inscripciones/:id'.
   @Delete(':id')
