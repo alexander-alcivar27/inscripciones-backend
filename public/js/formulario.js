@@ -192,7 +192,7 @@ async function cargarNacionalidades() {
             opt.value = p.id;
             opt.textContent = p.gentilicio;
             // Ecuador seleccionado por defecto
-            if (p.id === 83) {
+            if (p.id === 53) {
                 opt.selected = true;
             }
             nacionalidadSelect.appendChild(opt);
