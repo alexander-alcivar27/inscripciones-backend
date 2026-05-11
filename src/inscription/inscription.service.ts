@@ -66,12 +66,16 @@ export class InscripcionService {
     });
 
     // enviar correo
-    this.mailservice.enviarConfirmacionPreinscripcion(
-      inscription.correo,
-      inscription.nombres,
-    ).catch((error) => {
-      console.error('Error enviando correo:', error);
-    });
+// enviar correo
+//console.log('📧 Voy a enviar correo a:', inscription.correo);
+
+const resultadoCorreo =
+  await this.mailservice.enviarConfirmacionPreinscripcion(
+    inscription.correo,
+    inscription.nombres,
+  );
+
+//console.log('📧 Resultado:', resultadoCorreo);
 
     return {
       message: 'Inscripción guardada correctamente',

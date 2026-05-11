@@ -1,5 +1,6 @@
 
-const BASE_URL = 'https://capacitate-manabi.onrender.com';
+const BASE_URL = "https://inscripciones.lidera.cacicus.ec";
+//const BASE_URL = "http://localhost:3000";
 const PER_PAGE = 15;
 let TOKEN = '';
 let datosActuales = [];

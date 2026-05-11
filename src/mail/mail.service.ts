@@ -18,7 +18,10 @@ export class MailService {
 
   async enviarConfirmacionPreinscripcion(correo: string, nombres: string) {
     try {
-      await this.transporter.sendMail({
+
+      console.log('📨 Intentando enviar correo a:', correo);
+
+      const info = await this.transporter.sendMail({
         from: `"Escuela de Formación Ciudadana" <${process.env.EMAIL_USER}>`,
         to: correo,
         subject: 'Confirmación de preinscripción',
@@ -33,8 +36,23 @@ export class MailService {
           </div>
         `,
       });
+
+      //console.log('✅ Correo enviado correctamente');
+      //console.log('📩 Message ID:', info.messageId);
+
+      return true;
+
     } catch (error) {
-      this.logger.error('Error enviando correo de confirmación', error);
+
+      console.log('❌ ERROR REAL');
+      console.log(error);
+
+      this.logger.error(
+        'Error enviando correo de confirmación',
+        error?.stack || error,
+      );
+
+      return false;
     }
   }
 }
