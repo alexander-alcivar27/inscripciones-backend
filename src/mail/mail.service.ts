@@ -6,6 +6,12 @@ import * as nodemailer from 'nodemailer';
 export class MailService {
   private readonly logger = new Logger(MailService.name);
 
+  constructor() {
+    console.log('EMAIL_USER:', process.env.EMAIL_USER);
+    console.log('EMAIL_HOST:', process.env.EMAIL_HOST);
+    console.log('EMAIL_PORT:', process.env.EMAIL_PORT);
+  }
+
   private transporter = nodemailer.createTransport({
     host: process.env.EMAIL_HOST,
     port: Number(process.env.EMAIL_PORT),
@@ -37,8 +43,8 @@ export class MailService {
         `,
       });
 
-      //console.log('✅ Correo enviado correctamente');
-      //console.log('📩 Message ID:', info.messageId);
+      console.log('✅ Correo enviado correctamente');
+      console.log('📩 Message ID:', info.messageId);
 
       return true;
 
