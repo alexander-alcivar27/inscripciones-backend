@@ -1,5 +1,5 @@
 
-const BASE_URL = 'http://localhost:3000';
+const BASE_URL = "https://inscripciones.lidera.cacicus.ec";
 
 let currentStep = 1;
 let cedulaValida = false;
@@ -192,7 +192,7 @@ async function cargarNacionalidades() {
             opt.value = p.id;
             opt.textContent = p.gentilicio;
             // Ecuador seleccionado por defecto
-            if (p.id === 53) {
+            if (p.id === 83) {
                 opt.selected = true;
             }
             nacionalidadSelect.appendChild(opt);
