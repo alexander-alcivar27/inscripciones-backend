@@ -1,13 +1,17 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Preinscripción Escuela Ciudadana</title>
-    <link rel="stylesheet" href="css/formulario.css" />
-    <script src="js/formulario.js" defer></script>
+  <link rel="stylesheet" href="css/formulario.css" />
+  <script src="js/formulario.js" defer></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
 </head>
+
 <body>
 
   <div class="page">
@@ -69,7 +73,7 @@
               </div>
               <div>
                 <label>Fecha de nacimiento <span class="req">*</span></label>
-                <input type="text" id="fechaNac" placeholder="dd/mm/aaaa" />
+                <input type="date" id="fechaNac" class="input-fecha" placeholder="dd/mm/aaaa" />
               </div>
               <div>
                 <label>Nombres <span class="req">*</span></label>
@@ -81,11 +85,12 @@
               </div>
               <div>
                 <label>Correo electrónico <span class="req">*</span></label>
-                <input  type="email" id="correo" placeholder="nombre@correo.com" />
+                <input type="email" id="correo" placeholder="nombre@correo.com" />
               </div>
               <div>
                 <label>Celular <span class="req">*</span></label>
                 <input type="text" id="celular" placeholder="09XXXXXXXX" />
+                <small id="celularStatus"></small>
               </div>
             </div>
           </section>
@@ -97,28 +102,28 @@
             <div class="form-grid">
               <div>
                 <label>Provincia</label>
-                 <select id="provincia" onchange="cargarCantones()">
-                    <option value="">Seleccione...</option>
+                <select id="provincia" onchange="cargarCantones()">
+                  <option value="">Seleccione...</option>
                 </select>
               </div>
 
               <div>
                 <label>Cantón</label>
                 <select id="canton" onchange="cargarParroquias()">
-                        <option value="">Seleccione provincia primero</option>
-                        </select>
+                  <option value="">Seleccione provincia primero</option>
+                </select>
               </div>
 
               <div>
                 <label>Parroquia</label>
                 <select id="parroquia">
-                            <option value="">Seleccione cantón primero</option>
-                        </select>
+                  <option value="">Seleccione cantón primero</option>
+                </select>
               </div>
 
               <div>
                 <label>Comunidad, Barrio o sector</label>
-                <input type="text" placeholder="Opcional" />
+                <input type="text" id="barrio" placeholder="Opcional" />
               </div>
             </div>
           </section>
@@ -129,23 +134,38 @@
 
             <div class="group">
               <label>¿Trabajas o estudias?</label>
-              <div class="chips">
-                <span>Trabajo</span>
-                <span>Estudio</span>
-                <span>Trabajo y estudio</span>
-                <span>Ninguno</span>
+              <div class="group-bottons" id="ocupacion-chips">
+                <span data-value="Trabajo">Trabajo</span>
+                <span data-value="Estudio">Estudio</span>
+                <span data-value="Trabajo y estudio">Trabajo y estudio</span>
+                <span data-value="Ninguno">Ninguno</span>
+              </div>
+              <input type="hidden" name="trabajo_estudio" id="input-trabajo" value="">
+            </div>
+
+
+            <div class="group">
+              <div>
+                <label>Institución en la que trabajas o estudias</label>
+                <input type="text" id="institucion" placeholder="Ejemplo: Universidad de Guayaquil" />
               </div>
             </div>
 
             <div class="group">
               <label>Autoidentificación</label>
-              <div class="chips" id="identity-chips"></div>
+              <div class="group-bottons" id="identity-chips">
+                <span data-value="Indígena">Indígena</span>
+                <span data-value="Afroecuatoriano">Afroecuatoriano</span>
+                <span data-value="Montubio">Montubio</span>
+                <span data-value="Rural">Rural</span>
+                <span data-value="Urbano">Urbano</span>
+              </div>
             </div>
 
             <div class="form-grid">
               <div>
                 <label>Género</label>
-                <select>
+                <select id="genero">
                   <option>¿Te identificas como...?</option>
                   <option>Mujer</option>
                   <option>Hombre</option>
@@ -155,24 +175,44 @@
               </div>
 
               <div>
+                <label>Orientación sexual</label>
+                <select id="orientacionSexual">
+                  <option value="">Seleccione...</option>
+                  <option value="Heterosexual">Heterosexual</option>
+                  <option value="Homosexual">Homosexual</option>
+                  <option value="Bisexual">Bisexual</option>
+                  <option value="Pansexual">Pansexual</option>
+                  <option value="Asexual">Asexual</option>
+                </select>
+              </div>
+
+              <div>
                 <label>Nacionalidad</label>
-                 <select id="nacionalidad">
-                    <option value="">Seleccione...</option>
+                <select id="nacionalidad">
+                  <option value="">Seleccione...</option>
                 </select>
               </div>
 
               <div>
                 <label>Discapacidad</label>
-                <select>
-                  <option>Selecciona una opción</option>
-                  <option>Sí</option>
-                  <option>No</option>
+                <select id="discapacidad" name="discapacidad">
+                  <option value="">Selecciona una opción</option>
+                  <option value="Si">Si</option>
+                  <option value="No">No</option>
                 </select>
+              </div>
+
+              <div id="tipoDiscapacidadContainer" style="display: none;">
+                <label for="tipoDiscapacidad">Tipo de discapacidad</label>
+                <input type="text" id="tipoDiscapacidad" name="tipoDiscapacidad"
+                  placeholder="Escriba el tipo de discapacidad">
+
+                <small id="tipoDiscapacidadStatus"></small>
               </div>
 
               <div>
                 <label>Nivel de educación</label>
-                <select>
+                <select id="nivelEducacion">
                   <option>Selecciona una opción</option>
                   <option>Básica</option>
                   <option>Bachillerato</option>
@@ -185,41 +225,49 @@
           </section>
 
           <section class="form-card">
-  <h2>Consentimiento y aceptación <span class="required">*</span></h2>
+            <h2>Consentimiento y aceptación <span class="required">*</span></h2>
 
-  <div class="consent-text">
-    <p>
-      Declaro que la información proporcionada es verídica y autorizo su uso
-      exclusivamente para fines educativos y organizativos relacionados con los
-      cursos de Formación Ciudadana del GAD Provincial de Manabí.
-    </p>
+            <div class="consent-text">
+              <p>
+                Declaro que la información proporcionada es verídica y autorizo su uso
+                exclusivamente para fines educativos y organizativos relacionados con los
+                cursos de Formación Ciudadana del GAD Provincial de Manabí.
+              </p>
 
-    <p>
-      Al hacer clic en "Enviar", acepto participar en el curso correspondiente y
-      manifiesto mi voluntad de forma libre e informada. Esta inscripción
-      constituye una firma electrónica válida conforme a la Ley de Comercio
-      Electrónico, Firmas Electrónicas y Mensajes de Datos del Ecuador.
-    </p>
+              <p>
+                Al hacer clic en "Enviar", acepto participar en el curso correspondiente y
+                manifiesto mi voluntad de forma libre e informada. Esta inscripción
+                constituye una firma electrónica válida conforme a la Ley de Comercio
+                Electrónico, Firmas Electrónicas y Mensajes de Datos del Ecuador.
+              </p>
 
-    <p>
-      Autorizo el tratamiento de mis datos personales conforme a la Ley Orgánica
-      de Protección de Datos Personales, y acepto que el GAD Provincial de Manabí
-      pueda contactarme para notificaciones y seguimiento del proceso formativo.
-    </p>
-  </div>
+              <p>
+                Autorizo el tratamiento de mis datos personales conforme a la Ley Orgánica
+                de Protección de Datos Personales, y acepto que el GAD Provincial de Manabí
+                pueda contactarme para notificaciones y seguimiento del proceso formativo.
+              </p>
+            </div>
 
-  <label class="checkbox-line">
-    <input type="checkbox" id="aceptaTerminos" required />
-    <span>Acepto los términos y condiciones</span>
-  </label>
+            <label class="checkbox-line">
+              <input type="checkbox" id="aceptoTerminos" required />
+              <label for="aceptoTerminos">Acepto los términos y condiciones</label>
+            </label>
             <div class="actions">
-              <button class="primary">Continuar</button>
+              <button class="primary" id="continuarBtn" disabled>Continuar</button>
               <button class="secondary">Guardar borrador</button>
             </div>
 
-</section>
+            <div id="successCard" style="display: none;" class="success-card">
+              <h2>✅ Preinscripción guardada</h2>
+              <p>
+                Te enviamos un correo a tu dirección registrada con la confirmación.
+              </p>
+              <p>Gracias por inscribirte.</p>
+            </div>
 
-             
+          </section>
+
+
         </main>
       </div>
     </div>
@@ -227,4 +275,5 @@
 
 
 </body>
+
 </html>

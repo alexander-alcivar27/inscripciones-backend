@@ -25,7 +25,7 @@ export class CreateInscripcionDto {
   institucion!: string;
 
   @IsString()
-  provinciaId!: string;
+  parroquiaId!: string;
 
   @IsString()
   cantonId!: string;

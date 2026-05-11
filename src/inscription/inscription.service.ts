@@ -1,14 +1,20 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateInscripcionDto } from './dto/create-dto';
+import { MailService } from '../mail/mail.service';
 
 @Injectable()
 export class InscripcionService {
   // inyectamos el servicio de Prisma para poder interactuar con la base de datos
-  constructor(private prisma: PrismaService) { }
+  constructor(
+    private prisma: PrismaService,
+    private mailservice: MailService,
+  ) { }
 
-  // método para crear una nueva inscripción
-  async create(data: CreateInscripcionDto) {
+
+// inscripcion 
+  async create(data: any) {
+
 
     // 🔍 validar cédula
     const existing = await this.prisma.inscription.findUnique({
@@ -21,38 +27,59 @@ export class InscripcionService {
         field: 'cedula',
       });
     }
-
-    const saved = await this.prisma.inscription.create({
+    const inscription = await this.prisma.inscription.create({
       data: {
         cedula: data.cedula,
+
         nombres: data.nombres,
+
         apellidos: data.apellidos,
+
         correo: data.correo,
+
         celular: data.celular,
 
         fechaNacimiento: new Date(data.fechaNacimiento),
 
         ocupacion: data.ocupacion,
+
         institucion: data.institucion,
-        parroquiaId: Number(data.parroquia),
+
+        parroquiaId: Number(data.parroquiaId),
+
         barrio: data.barrio,
 
         genero: data.genero,
+
         orientacionSexual: data.orientacionSexual,
-        nacionalidadId: Number(data.nacionalidad),
+
+        nacionalidadId: Number(data.nacionalidadId),
+
         autoidentificacion: data.autoidentificacion,
 
         discapacidad: data.discapacidad,
+
         tipoDiscapacidad: data.tipoDiscapacidad,
+
         nivelEducacion: data.nivelEducacion,
       },
     });
 
+    // enviar correo
+    this.mailservice.enviarConfirmacionPreinscripcion(
+      inscription.correo,
+      inscription.nombres,
+    ).catch((error) => {
+      console.error('Error enviando correo:', error);
+    });
+
     return {
-      message: 'Matriculado correctamente',
-      data: saved,
+      message: 'Inscripción guardada correctamente',
+      data: inscription,
     };
   }
+
+
   // método para obtener todas las inscripciones
   async findAll() {
     return this.prisma.inscription.findMany();
@@ -70,89 +97,89 @@ export class InscripcionService {
     });
     return { exists: !!user };
   }
-/*   // método para obtener inscripciones por el nombre de la provincia
-  async getPorProvincia(nombre: string) {
-    const personas = await this.prisma.inscription.findMany({
-      where: {
-        provincia: {
-          nombre: {
-            contains: nombre,
-            mode: 'insensitive', // Ignorar mayúsculas/minúsculas
+  /*   // método para obtener inscripciones por el nombre de la provincia
+    async getPorProvincia(nombre: string) {
+      const personas = await this.prisma.inscription.findMany({
+        where: {
+          provincia: {
+            nombre: {
+              contains: nombre,
+              mode: 'insensitive', // Ignorar mayúsculas/minúsculas
+            },
           },
         },
-      },
-      select: {
-        cedula: true,
-        nombres: true,
-        apellidos: true,
-        correo: true,
-        celular: true,
-        fechaNacimiento: true,
-        ocupacion: true,
-        institucion: true,
-      
-        parroquia: true,
-        barrio: true,
-        genero: true,
-        orientacionSexual: true,
-        nacionalidad: true,
-        autoidentificacion: true,
-        discapacidad: true,
-        tipoDiscapacidad: true,
-        nivelEducacion: true,
-        createdAt: true,
-
-        // 🔥 RELACIONES (AQUÍ ESTÁ LA CLAVE)
-        canton: {
-          select: {
-            nombre: true
+        select: {
+          cedula: true,
+          nombres: true,
+          apellidos: true,
+          correo: true,
+          celular: true,
+          fechaNacimiento: true,
+          ocupacion: true,
+          institucion: true,
+        
+          parroquia: true,
+          barrio: true,
+          genero: true,
+          orientacionSexual: true,
+          nacionalidad: true,
+          autoidentificacion: true,
+          discapacidad: true,
+          tipoDiscapacidad: true,
+          nivelEducacion: true,
+          createdAt: true,
+  
+          // 🔥 RELACIONES (AQUÍ ESTÁ LA CLAVE)
+          canton: {
+            select: {
+              nombre: true
+            }
+          },
+          provincia: {
+            select: {
+              nombre: true
+            }
           }
         },
-        provincia: {
-          select: {
-            nombre: true
-          }
-        }
-      },
-    });
-        const formatted = personas.map(p => ({
-          ...p,
-          provincia: p.provincia?.nombre,
-          canton: p.canton?.nombre,
-        }));
-
-    return {
-      total: formatted.length,
-      personas: formatted,
-    };
-   
-  } */
+      });
+          const formatted = personas.map(p => ({
+            ...p,
+            provincia: p.provincia?.nombre,
+            canton: p.canton?.nombre,
+          }));
+  
+      return {
+        total: formatted.length,
+        personas: formatted,
+      };
+     
+    } */
 
   // método para obtener inscripciones por el nombre del cantón
-/*   async getPorCanton(nombre: string) {
-    const personas = await this.prisma.inscription.findMany({
-      where: {
-        canton: {
-          nombre: {
-            contains: nombre,
-            mode: 'insensitive', // Ignorar mayúsculas/minúsculas
+  /*   async getPorCanton(nombre: string) {
+      const personas = await this.prisma.inscription.findMany({
+        where: {
+          canton: {
+            nombre: {
+              contains: nombre,
+              mode: 'insensitive', // Ignorar mayúsculas/minúsculas
+            },
           },
         },
-      },
-      select: {
-        cedula: true,
-        nombres: true,
-        apellidos: true,
-        correo: true,
-        celular: true,
-      },
-    });
-
-    return {
-      total: personas.length,
-      personas,
-    };
-  } */
+        select: {
+          cedula: true,
+          nombres: true,
+          apellidos: true,
+          correo: true,
+          celular: true,
+        },
+      });
+  
+      return {
+        total: personas.length,
+        personas,
+      };
+    } */
   // método para obtener un reporte general de todas las inscripciones con detalles de provincia y cantón
   async getReporteGeneral() {
     const personas = await this.prisma.inscription.findMany({

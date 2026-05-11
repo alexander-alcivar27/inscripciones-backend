@@ -86,10 +86,10 @@ model Parroquia {
 }
 
 model Nacionalidad {
-  id       paisNac   Int    @id @default(autoincrement())
-  paisNac     String @map("pais_nac")
-  gentilicio  String @map("gentilicio_nac")
-  iso         String @map("iso_nac")
+  id         Int    @id @default(autoincrement()) // cambie id pasisNac int 
+  paisNac    String @map("pais_nac")
+  gentilicio String @map("gentilicio_nac")
+  iso        String @map("iso_nac")
 
   inscriptions Inscription[]
 

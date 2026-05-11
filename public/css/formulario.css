@@ -352,3 +352,51 @@ button.secondary {
   height: 18px;
   accent-color: #0fac9a;
 }
+
+/* Estilos para botones de elegir */
+.group-bottons span {
+  padding: 10px 20px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  cursor: pointer;
+  display: inline-block;
+  margin: 5px;
+  transition: all 0.3s ease;
+  user-select: none;
+  /* Evita que se seleccione el texto al hacer clic */
+}
+
+.group-bottons span.selected {
+  background-color: #1a2a4e;
+  /* El azul de tu diseño */
+  color: white;
+  border-color: #1a2a4e;
+}
+
+/* stilo de la tarjeta de confirmacion*/
+.success-card {
+  margin-top: 30px;
+  padding: 30px;
+  border-radius: 24px;
+  background: #ffffff;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12);
+  text-align: center;
+  color: #10284a;
+}
+
+.success-card h2 {
+  margin-bottom: 12px;
+  color: #0f9d8a;
+}
+
+/* estilo para el input de fecha*/
+.input-fecha {
+  width: 100%;
+  padding: 14px 18px;
+  border-radius: 20px;
+  border: 2px solid #33c3bd;
+  font-size: 16px;
+  outline: none;
+  background: white;
+  box-sizing: border-box;
+}
