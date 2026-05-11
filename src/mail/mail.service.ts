@@ -101,15 +101,22 @@ export class MailService {
 
       return true;
 
-    } catch (error) {
+    } catch (error: unknown) {
 
       console.log('❌ ERROR REAL');
       console.log(error);
 
-      this.logger.error(
-        'Error enviando correo de confirmación',
-        error?.stack || error,
-      );
+      if (error instanceof Error) {
+        this.logger.error(
+          'Error enviando correo de confirmación',
+          error.stack,  // me daba error en error?.stack, me decia que stack no existia
+        );
+      } else {
+        this.logger.error(
+          'Error enviando correo de confirmación',
+          String(error),
+        );
+      }
 
       return false;
     }
