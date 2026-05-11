@@ -123,26 +123,41 @@ async function verTodos() {
     await cargarReporte();
 }
 
+//buscar por provincia
 async function buscar() {
     const termino = document.getElementById('inputBusqueda').value.trim();
-    if (!termino) { await cargarReporte(); return; }
+
+    if (!termino) {
+        await cargarReporte();
+        return;
+    }
 
     mostrarCargando();
+
     try {
         const res = await fetch(
             `${BASE_URL}/inscripciones/reporte/provincia/${encodeURIComponent(termino)}`,
             { headers: authHeaders() }
         );
-        if (res.status === 401) { cerrarSesion(); return; }
+
+        if (res.status === 401) {
+            cerrarSesion();
+            return;
+        }
+
         const data = await res.json();
+
         datosActuales = data.personas || [];
+
         calcularStats(datosActuales);
-        // Búsqueda → solo cédula, nombres, correo
         setHeaderCompleto();
+
         paginaActual = 1;
-        renderTablaBusqueda();
+        renderTabla();
         actualizarCharts(datosActuales);
+
     } catch (err) {
+        console.error(err);
         mostrarError('Error al buscar.');
     }
 }
@@ -558,7 +573,7 @@ function buildCharts(datos) {
     // Nivel educación
     const nivelCount = {};
     datos.forEach(p => { const n = p.nivelEducacion || 'No especificado'; nivelCount[n] = (nivelCount[n] || 0) + 1; });
-    const nivelOrden = ['Primaria', 'Superior', 'Secundaria incompleta', 'Secundaria completa', 'Técnico / Tecnológico', 'Universidad incompleta', 'Universidad completa', 'Posgrado'];
+    const nivelOrden = ['Básica', 'Bachillerato', 'Tercer nivel', 'Carto nivel','Sin estudios'];
     const nivelLabels = nivelOrden.filter(n => nivelCount[n]);
     if (chartEducacionInst) chartEducacionInst.destroy();
     chartEducacionInst = new Chart(document.getElementById('chartEducacion'), {
@@ -585,6 +600,7 @@ function buildCharts(datos) {
     });
 }
 
+
 function actualizarCharts(datos) {
     if (chartsBuilt && document.getElementById('chartsSection').classList.contains('open')) {
         buildCharts(datos);
@@ -592,4 +608,3 @@ function actualizarCharts(datos) {
         chartsBuilt = false;
     }
 }
-
