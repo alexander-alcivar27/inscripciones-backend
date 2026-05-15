@@ -148,7 +148,7 @@ export class MailService {
                   <tr>
                     <td style="background:#00AA99;padding:0;">
                       <img 
-                        src="https://cacicustech.com/capacitate_manabi/assets/banner-correo-01.jpg" 
+                        src="https://cacicustech.com/capacitate_manabi/assets/header_02_escuelas.jpg" 
                         alt="Escuela de Formación Ciudadana y Liderazgo Territorial" 
                         width="680"
                         style="width:100%;max-width:680px;height:auto;display:block;border:0;outline:none;text-decoration:none;"

@@ -1,7 +1,7 @@
 
-//const BASE_URL = "https://inscripciones.lidera.cacicus.ec";
+const BASE_URL = "https://inscripciones.lidera.cacicus.ec";
 
-const BASE_URL = "http://localhost:3000";
+//const BASE_URL = "http://localhost:3000";
 
 let currentStep = 1;
 let cedulaValida = false;
