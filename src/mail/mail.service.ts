@@ -199,7 +199,7 @@ export class MailService {
                   <tr>
                     <td style="background:#00AA99;padding:0;">
                       <img 
-                        src="https://cacicustech.com/capacitate_manabi/assets/fotter-correo-02.jpg" 
+                        src="https://cacicustech.com/capacitate_manabi/assets/footer_03_escuelas.jpg" 
                         alt="Información de contacto de la Escuela" 
                         width="680"
                         style="width:100%;max-width:680px;height:auto;display:block;border:0;outline:none;text-decoration:none;"
