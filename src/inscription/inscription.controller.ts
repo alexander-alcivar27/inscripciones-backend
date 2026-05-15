@@ -13,11 +13,14 @@ export class InscripcionController {
     console.log('Datos recibidos en el controlador:', body);
     return this.service.create(body);
   }
+  
   // Define un método para manejar las solicitudes GET a la ruta '/inscripciones'.
-  @Get()
-  findAll() {
-    return this.service.findAll();
-  }
+  //@Get()
+  //findAll() {
+  //  return this.service.findAll();
+  //}
+
+
   // Define un método para manejar las solicitudes GET a la ruta '/inscripciones/cedula/:cedula'.
   @Get('cedula/:cedula')
   findByCedula(@Param('cedula') cedula: string) {

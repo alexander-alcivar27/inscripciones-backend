@@ -4,6 +4,8 @@ import { UbicacionModule } from './ubicacion/ubicacion.module';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { NacionalidadesModule } from './nacionalidades/nacionalidades.module';
+import { CohortsModule } from './cohorts/cohorts.module';
+import { MailModule } from './mail/mail.module';
 
 
 @Module({
@@ -14,6 +16,8 @@ import { NacionalidadesModule } from './nacionalidades/nacionalidades.module';
     UbicacionModule,
     AuthModule,
     NacionalidadesModule,
+    CohortsModule,
+    MailModule,
   ],
   controllers: [],
   providers: [],

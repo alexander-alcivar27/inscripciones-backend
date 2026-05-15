@@ -37,6 +37,8 @@ model Inscription {
   tipoDiscapacidad String?
   nivelEducacion   String
 
+  cohortStudents CohortStudent[]
+
   createdAt    DateTime     @default(now())
   parroquia    Parroquia    @relation(fields: [parroquiaId], references: [id])
   nacionalidad Nacionalidad @relation(fields: [nacionalidadId], references: [id])
@@ -94,4 +96,41 @@ model Nacionalidad {
   inscriptions Inscription[]
 
   @@map("Nacionalidad")
+}
+
+model Cohort {
+  id          Int     @id @default(autoincrement())
+  name        String
+  description String?
+  courseName  String?
+  moodleUrl   String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  students CohortStudent[]
+}
+
+model CohortStudent {
+  id Int @id @default(autoincrement())
+
+  cohortId Int
+  cohort   Cohort @relation(fields: [cohortId], references: [id])
+
+  inscriptionId Int?
+  inscription   Inscription? @relation(fields: [inscriptionId], references: [id])
+
+  cedula    String
+  nombres   String
+  apellidos String?
+  correo    String?
+
+  moodleUsername String
+  moodlePassword String?
+
+  emailSent   Boolean   @default(false)
+  emailSentAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
